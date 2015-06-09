@@ -23,24 +23,51 @@ files
     (resources)
     app.icf
     main.lua
+    config.lua
 }
 
 assets
 {
     (resources)
         .
+    
+    # Base asset set used by both optimisation options
+    [nonCompiled]
+    (resources)
+    
+    # These are engine code that's never pre-compiled,
+    # so must include source version
+    quicklua/dbg.lua
+    quicklua/openquick.lua
+    quicklua/QConfig.lua
+    
+    #edit this if you are using a custom file via [QUICK] configFileName=
+    config.lua
+
+    # Non-code assets go here. This assumes your assets are in these folders.
+    # Add to and edit this if needed.
+    fonts
+    graphics
+    
+    # List any of your own files that use require() rather than dofile() here.
+    # Only dofile-included code gets precompiled.
+    # myRequiredFile.lua
+    
+    # Use this to deploy a build using precompiled but not concatenated Lua
+    [precompiledLua]
+    <include nonCompiled>
+    (resources-precompiled)
+    .
+    
+    # Use this to deploy a build using precompiled and concatenated Lua
+    [optimisedLua]
+    <include nonCompiled>
+    (resources-concatenated)
+    .
 }
 
 deployments
 {
-    ["Windows"]
-    win32
-    arch=x86
-
-    ["Mac OS X"]
-    osx
-    arch=x86
-
-    # Ensure subsequent options set on "Default" configuration
-    ["Default"]
+    # App ID for Facebook apps
+    android-extra-strings='(app_id,fb_app_id)'
 }
