@@ -84,7 +84,7 @@ function gameover() --Game lost!
   end
 
   local newData = json.encode(data)
-  local file = io.open(pathS .. "d.txt", "w")
+  file = io.open(pathS .. "d.txt", "w")
   file:write(newData)
   file:close()
 
@@ -112,21 +112,16 @@ function pressReset(event) --Reset pressed from event listener
 end
 
 function resetEnemies()
-  for i=1,maxEnemies
-    do 
-    enemyArray[i]:getSprite().x = director.displayCenterX -- Move enemies back to start pos
-  end
-
   local yx = math.random(director.displayCenterY - 350, director.displayCenterY - 100)
   local yy = math.random(director.displayCenterY - 350, director.displayCenterY - 100)   
   local yz = math.random(director.displayCenterY - 350, director.displayCenterY - 100) 
 
-  local a = enemyArray[1]:getSprite().x
-  local b = enemyArray[2]:getSprite().x
-  local c = enemyArray[3]:getSprite().x - ((director.displayCenterX / 2)*2)
-  local d = enemyArray[4]:getSprite().x - ((director.displayCenterX / 2)*2)
-  local e = enemyArray[5]:getSprite().x + ((director.displayCenterX / 2)*2)
-  local f = enemyArray[6]:getSprite().x + ((director.displayCenterX / 2)*2)
+  local a = director.displayCenterX
+  local b = a
+  local c = 0
+  local d = 0
+  local e = director.displayCenterX * 2 
+  local f = e
 
   enemyArray[1]:getSprite().physics:setTransform(a + widthAdder, yx, 0)
   enemyArray[2]:getSprite().physics:setTransform(b + widthAdder, yx+heightAdder, 0)
@@ -146,7 +141,7 @@ function reset() --Game reset
   background.color = color.white
   startGameHelp.alpha = 1
   startGameHelp.color = color.red
-  startGameHelp.text = "Tap to start!"
+  startGameHelp.text = "Tap three times to start!"
   gameTaps = 0
   resetButton.alpha = 0
   menuButton.alpha = 0
@@ -252,7 +247,7 @@ function gameScene:setUp(event)
   player.yAnchor = 0.5
   player.name ='player'
 
-  startGameHelp = director:createLabel(0, director.displayCenterY, 'Tap to start!')
+  startGameHelp = director:createLabel(0, director.displayCenterY, 'Tap three times to start!')
   startGameHelp.color = color.red
 
   maxEnemies = 6

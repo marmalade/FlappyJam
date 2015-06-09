@@ -1,3 +1,18 @@
+# Marmalade stuff
+**/build_temp/**
+**/resources-ram/**
+development.icf
+iwtrace.txt
+
+#ignoring project as the tutorial doesn't set any values
+#you might want to un-ignore this if using hub deploy options!
+**/project_*
+
+# Other tools stuff
+*.sw?
+MiniDump.dmp
+*.bak
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db

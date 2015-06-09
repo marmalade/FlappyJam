@@ -25,7 +25,7 @@
 --------------------------------------------------------------------------------
 QAnimation = {}
 QAnimation.__index = QAnimation -- presumably we can point down a chain of inheritance?
-
+_animationList={}
 -- Override QNode GC function (still call old one at the end)
 QAnimation.oldGC = getmetatable(quick.QAnimation).__gc
 QAnimation.newGC = function(n)
@@ -40,27 +40,19 @@ end
 --------------------------------------------------------------------------------
 -- Private API
 --------------------------------------------------------------------------------
-QAnimation.serialize = function(o)
-	local obj = serializeTLMT(getmetatable(o), o)
-	return obj
-end
-
 --[[
 /*
 Initialise the peer table for the C++ class QAnimation.
 This must be called immediately after the QAnimation() constructor.
 */
 --]]
-function QAnimation:initAnimation(n)
+function QAnimation:initAnimation(l)
+    if config.debug.traceGC == true then
+        getmetatable(l).__gc = QAnimation.newGC
+    end
     local lp = {}
     setmetatable(lp, QAnimation)
-    tolua.setpeer(n, lp)
-
-    local mt = getmetatable(n) 
-    mt.__serialize = QAnimation.serialize
-    if config.debug.traceGC == true then
-        mt.__gc = QAnimation.newGC
-    end
+    tolua.setpeer(l, lp)
 end
 
 --------------------------------------------------------------------------------
@@ -122,10 +114,6 @@ function director:createAnimation(values)
     end
 
     n:setDelay( values.delay or 1)
-
-     -- Store this animation in the current QScene object's atlas list
---    dbg.print( "Adding animation to scene "..tostring(self.currentScene))
-    self.currentScene._animationList[n]  = n
-
+	table.insert( _animationList, n)
     return n
 end

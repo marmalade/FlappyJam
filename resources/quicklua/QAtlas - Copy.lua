@@ -25,7 +25,7 @@
 --------------------------------------------------------------------------------
 QAtlas = {}
 QAtlas.__index = QAtlas
-
+_atlasList={}
 -- Override QNode GC function (still call old one at the end)
 QAtlas.oldGC = getmetatable(quick.QAtlas).__gc
 QAtlas.newGC = function(n)
@@ -40,27 +40,20 @@ end
 --------------------------------------------------------------------------------
 -- Private API
 --------------------------------------------------------------------------------
-QAtlas.serialize = function(o)
-	local obj = serializeTLMT(getmetatable(o), o)
-	return obj
-end
-
 --[[
 /*
 Initialise the peer table for the C++ class QAtlas.
 This must be called immediately after the QAtlas() constructor.
 */
 --]]
-function QAtlas:initAtlas(n)
+function QAtlas:initAtlas(l)
+    if config.debug.traceGC == true then
+        getmetatable(l).__gc = QAtlas.newGC
+    end
     local lp = {}
     setmetatable(lp, QAtlas)
-    tolua.setpeer(n, lp)
-
-    local mt = getmetatable(n) 
-    mt.__serialize = QAtlas.serialize
-    if config.debug.traceGC == true then
-        mt.__gc = QAtlas.newGC
-    end
+    tolua.setpeer(l, lp)
+    -- Add Lua variables below...
 end
 
 --------------------------------------------------------------------------------
@@ -149,11 +142,8 @@ function director:createAtlas(values)
         dbg.assertFuncVarTypes({"string"}, values)
         n:initFromFile(values)
     end
-
-    -- Store this Atlas in the current QScene object's atlas list
---    dbg.print( "Adding atlas to scene "..tostring(self.currentScene))
-    self.currentScene._atlasList[n] = n
-
+	-- Store this Atlas in the current QScene object's atlas list
+    table.insert( _atlasList, n)
     return n
 end
 
