@@ -47,11 +47,13 @@ assets
     # Non-code assets go here. This assumes your assets are in these folders.
     # Add to and edit this if needed.
     fonts
-    graphics
+    gfx
+    sfx
     
     # List any of your own files that use require() rather than dofile() here.
     # Only dofile-included code gets precompiled.
-    # myRequiredFile.lua
+    class.lua
+    object.lua
     
     # Use this to deploy a build using precompiled but not concatenated Lua
     [precompiledLua]

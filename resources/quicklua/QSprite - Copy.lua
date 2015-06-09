@@ -109,6 +109,7 @@ function director:createSprite(x, y, source)
     QNode:initNode(n)
     QSprite:initSprite(n)
     self:addNodeToLists(n)
+    self:addNodeToLists(n)
 
     local frame = nil
 
@@ -183,3 +184,7 @@ function QSprite:play(n)
     self:_play( startFrame, loopCount)
 end
 
+
+function QSprite:playOnce()
+    self:_play( startFrame, 3)
+end
